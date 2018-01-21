@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'maven:alpine'
-      args '-v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2'
+      args '-v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2 --network=ci_attachable'
     }
 
   }
@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Code Quality') {
       steps {
-        sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar -f $PWD/sonarqube-scanner-maven/pom.xml -Dsonar.host.url=http://node1:9000'
+        sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar -f $PWD/sonarqube-scanner-maven/pom.xml -Dsonar.host.url=http://sonarqube:9000/sonar'
       }
     }
     stage('REL deployment') {
